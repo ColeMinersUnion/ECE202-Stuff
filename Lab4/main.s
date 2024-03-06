@@ -247,7 +247,7 @@ check41
 	AND r1, #0x2E ;selecting the bits i want
     MOV r2, #0x0000002C ;I think I got this right
     CMP r1, r2
-    BNE check12
+    BNE check42
     MOV r4, #0x0000002B ;+ I forgot what the keypad looked like so put some unique characters here sorry
     B displaykey
 
@@ -257,7 +257,7 @@ check42
 	AND r1, #0x2E ;selecting the bits I want
     MOV r2, #0x0000002A
     CMP r1, r2
-    BNE check13
+    BNE check43
     MOV r4, #0x00000030 ;0
     B displaykey
 
@@ -267,7 +267,7 @@ check43
     AND r1, #0x2E ; I think I need this here
     MOV r2, #0x00000026
     CMP r1, r2
-    BNE check14
+    BNE check44
     MOV r4, #0x0000002D ;-
     B displaykey
 
