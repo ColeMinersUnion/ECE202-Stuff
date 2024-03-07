@@ -67,7 +67,7 @@ startWhile
 	
 ;debounces button press
 debounce
-	MOV r1, #1
+	MOV r1, #999
 loopDe
 	SUB r1, #1
 	CMP r1, #0
@@ -96,7 +96,8 @@ check11
     MOV r2, #0x0000002C ;I think I got this right
     CMP r1, r2
     BNE check12
-    MOV r4, #0x00000031 ;1
+    MOV r5, #0x00000031 ;1
+	MOV r4, r5
     B displaykey
 
 check12
@@ -106,8 +107,9 @@ check12
     MOV r2, #0x0000002A
     CMP r1, r2
     BNE check13
-    MOV r4, #0x00000032 ;2
-    B displaykey
+    MOV r5, #0x00000032 ;2
+    MOV r4, r5
+	B displaykey
 
 check13
     LDR r0, =GPIOB_BASE
@@ -116,11 +118,13 @@ check13
     MOV r2, #0x00000026
     CMP r1, r2
     BNE check14
-    MOV r4, #0x00000033 ;3
-    B displaykey
+    MOV r5, #0x00000033 ;3
+    MOV r4, r5
+	B displaykey
 
 check14
-    MOV r4, #0x00000041 ;a
+    MOV r5, #0x00000041 ;a
+	MOV r4, r5
     B displaykey
 
 
@@ -148,7 +152,8 @@ check21
     MOV r2, #0x0000002C ;I think I got this right
     CMP r1, r2
     BNE check22
-    MOV r4, #0x00000034 ;4
+    MOV r5, #0x00000034 ;4
+	MOV r4, r5
     B displaykey
 
 check22
@@ -158,7 +163,8 @@ check22
     MOV r2, #0x0000002A
     CMP r1, r2
     BNE check23
-    MOV r4, #0x00000035 ;5
+    MOV r5, #0x00000035 ;5
+	MOV r4, r5
     B displaykey
 
 check23
@@ -168,11 +174,13 @@ check23
     MOV r2, #0x00000026
     CMP r1, r2
     BNE check24
-    MOV r4, #0x00000036 ;6
+    MOV r5, #0x00000036 ;6
+	MOV r4, r5
     B displaykey
 
 check24
-    MOV r4, #0x00000042 ;b
+    MOV r5, #0x00000042 ;b
+	MOV r4, r5
     B displaykey
 
 row3Check
@@ -198,7 +206,8 @@ check31
     MOV r2, #0x0000002C ;I think I got this right
     CMP r1, r2
     BNE check32
-    MOV r4, #0x00000037 ;7
+    MOV r5, #0x00000037 ;7
+	MOV r4, r5
     B displaykey
 
 check32
@@ -208,8 +217,9 @@ check32
     MOV r2, #0x0000002A
     CMP r1, r2
     BNE check33
-    MOV r4, #0x00000038 ;8
-    B displaykey
+    MOV r5, #0x00000038 ;8
+    MOV r4, r5
+	B displaykey
 
 check33
     LDR r0, =GPIOB_BASE
@@ -218,12 +228,14 @@ check33
     MOV r2, #0x00000026
     CMP r1, r2
     BNE check34
-    MOV r4, #0x00000039 ;9
-    B displaykey
+    MOV r5, #0x00000039 ;9
+    MOV r4, r5
+	B displaykey
 
 check34
-    MOV r4, #0x00000043 ;c
-    B displaykey
+    MOV r5, #0x00000043 ;c
+    MOV r4, r5
+	B displaykey
 
 
 
@@ -248,8 +260,9 @@ check41
     MOV r2, #0x0000002C ;I think I got this right
     CMP r1, r2
     BNE check42
-    MOV r4, #0x0000002B ;+ I forgot what the keypad looked like so put some unique characters here sorry
-    B displaykey
+    MOV r5, #0x0000002B ;+ I forgot what the keypad looked like so put some unique characters here sorry
+    MOV r4, r5
+	B displaykey
 
 check42
     LDR r0, =GPIOB_BASE
@@ -258,7 +271,8 @@ check42
     MOV r2, #0x0000002A
     CMP r1, r2
     BNE check43
-    MOV r4, #0x00000030 ;0
+    MOV r5, #0x00000030 ;0
+	MOV r4, r5
     B displaykey
 
 check43
@@ -268,13 +282,22 @@ check43
     MOV r2, #0x00000026
     CMP r1, r2
     BNE check44
-    MOV r4, #0x0000002D ;-
-    B displaykey
+    MOV r5, #0x0000002D ;-
+    MOV r4, r5
+	B displaykey
 
 check44
-    MOV r4, #0x00000044 ;d
-    B displaykey
+    MOV r5, #0x00000044 ;d
+    MOV r4, r5
+	B displaykey
 
+debounce2
+	MOV r1, #999
+loopDe
+	SUB r1, #1
+	CMP r1, #0
+	BNE loopDe	
+	B startWhile
 	
 
 displaykey
@@ -284,16 +307,15 @@ displaykey
 	LDR r0, =str   ; First argument
 	MOV r1, #1    ; Second argument
 	BL USART2_Write
- 	
+ 	B debounce2
 	ENDP		
 	
 	ALIGN			
 	AREA myData, DATA, READWRITE
 	ALIGN
 ;char1	DCD	0x43
-str 	DCB 'a', 0
+str 	DCB 'x', 0
 	END
-
 
 
 
