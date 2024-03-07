@@ -62,20 +62,22 @@ startWhile
 	LDR r1, [r0, #GPIO_IDR]
 	AND r1, #0x2E				;isolates for just the pins we want
 	CMP r1, r2					;checks for equivalence
-	BNE	debounce
+	BNE row1Check
 	B startWhile
 	
+	
 ;debounces button press
-debounce
-	MOV r1, #999
-loopDe
-	SUB r1, #1
-	CMP r1, #0
-	BNE loopDe	
-	B row1Check
+delay	PROC
+	; Delay for software debouncing
+	LDR	r8, =0x9999
+delayloop
+	SUBS	r8, #1
+	BNE	delayloop
+	BX LR
 	
 	;checks if row 1 has the pressed button
 row1Check
+	BL delay
 	LDR r0, =GPIOC_BASE
 	LDR r1, [r0, #GPIO_ODR]
 	AND r1, #0x00000000			;sets us back to a starting point
@@ -97,7 +99,7 @@ check11
     CMP r1, r2
     BNE check12
     MOV r5, #0x00000031 ;1
-	MOV r4, r5
+	STR r5, [r4]
     B displaykey
 
 check12
@@ -108,7 +110,7 @@ check12
     CMP r1, r2
     BNE check13
     MOV r5, #0x00000032 ;2
-    MOV r4, r5
+    STR r5, [r4]
 	B displaykey
 
 check13
@@ -119,16 +121,17 @@ check13
     CMP r1, r2
     BNE check14
     MOV r5, #0x00000033 ;3
-    MOV r4, r5
+    STR r5, [r4]
 	B displaykey
 
 check14
     MOV r5, #0x00000041 ;a
-	MOV r4, r5
+    STR r5, [r4]
     B displaykey
 
 
 row2Check
+	BL delay
 	LDR r0, =GPIOC_BASE
 	LDR r1, [r0, #GPIO_ODR]
 	AND r1, #0x00000000			;sets us back to a starting point
@@ -153,7 +156,7 @@ check21
     CMP r1, r2
     BNE check22
     MOV r5, #0x00000034 ;4
-	MOV r4, r5
+    STR r5, [r4]
     B displaykey
 
 check22
@@ -164,7 +167,7 @@ check22
     CMP r1, r2
     BNE check23
     MOV r5, #0x00000035 ;5
-	MOV r4, r5
+    STR r5, [r4]
     B displaykey
 
 check23
@@ -175,15 +178,16 @@ check23
     CMP r1, r2
     BNE check24
     MOV r5, #0x00000036 ;6
-	MOV r4, r5
+    STR r5, [r4]
     B displaykey
 
 check24
     MOV r5, #0x00000042 ;b
-	MOV r4, r5
+    STR r5, [r4]
     B displaykey
 
 row3Check
+	BL delay
 	LDR r0, =GPIOC_BASE
 	LDR r1, [r0, #GPIO_ODR]
 	AND r1, #0x00000000			;sets us back to a starting point
@@ -207,7 +211,7 @@ check31
     CMP r1, r2
     BNE check32
     MOV r5, #0x00000037 ;7
-	MOV r4, r5
+    STR r5, [r4]
     B displaykey
 
 check32
@@ -218,7 +222,7 @@ check32
     CMP r1, r2
     BNE check33
     MOV r5, #0x00000038 ;8
-    MOV r4, r5
+    STR r5, [r4]
 	B displaykey
 
 check33
@@ -229,17 +233,18 @@ check33
     CMP r1, r2
     BNE check34
     MOV r5, #0x00000039 ;9
-    MOV r4, r5
+    STR r5, [r4]
 	B displaykey
 
 check34
     MOV r5, #0x00000043 ;c
-    MOV r4, r5
+    STR r5, [r4]
 	B displaykey
 
 
 
 row4Check
+	BL delay
 	LDR r0, =GPIOC_BASE
 	LDR r1, [r0, #GPIO_ODR]
 	AND r1, #0x00000000			;sets us back to a starting point
@@ -261,7 +266,7 @@ check41
     CMP r1, r2
     BNE check42
     MOV r5, #0x0000002B ;+ I forgot what the keypad looked like so put some unique characters here sorry
-    MOV r4, r5
+    STR r5, [r4]
 	B displaykey
 
 check42
@@ -272,7 +277,7 @@ check42
     CMP r1, r2
     BNE check43
     MOV r5, #0x00000030 ;0
-	MOV r4, r5
+    STR r5, [r4]
     B displaykey
 
 check43
@@ -283,31 +288,24 @@ check43
     CMP r1, r2
     BNE check44
     MOV r5, #0x0000002D ;-
-    MOV r4, r5
+    STR r5, [r4]
 	B displaykey
 
 check44
     MOV r5, #0x00000044 ;d
-    MOV r4, r5
+    STR r5, [r4]
 	B displaykey
-
-debounce2
-	MOV r1, #999
-loopDe
-	SUB r1, #1
-	CMP r1, #0
-	BNE loopDe	
-	B startWhile
 	
 
 displaykey
 ;char1 DCD 43
+	PUSH {LR}
 	STR	r5, [r8]
 	;LDR	r0, =char1
 	LDR r0, =str   ; First argument
 	MOV r1, #1    ; Second argument
 	BL USART2_Write
- 	B debounce2
+ 	POP{PC}
 	ENDP		
 	
 	ALIGN			
