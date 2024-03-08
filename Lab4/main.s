@@ -90,6 +90,7 @@ row1Check
 	CMP r1, r2					;checks for equivalence
 	BNE check11
 	B row2Check
+
 	
 check11
 	LDR r0, =GPIOB_BASE
@@ -101,6 +102,7 @@ check11
     MOV r5, #0x00000031 ;1
 	STR r5, [r4]
     B displaykey
+	B startWhile
 
 check12
     LDR r0, =GPIOB_BASE
@@ -112,6 +114,7 @@ check12
     MOV r5, #0x00000032 ;2
     STR r5, [r4]
 	B displaykey
+	B startWhile
 
 check13
     LDR r0, =GPIOB_BASE
@@ -123,11 +126,13 @@ check13
     MOV r5, #0x00000033 ;3
     STR r5, [r4]
 	B displaykey
+	B startWhile
 
 check14
     MOV r5, #0x00000041 ;a
     STR r5, [r4]
     B displaykey
+	B startWhile
 
 
 row2Check
@@ -158,6 +163,7 @@ check21
     MOV r5, #0x00000034 ;4
     STR r5, [r4]
     B displaykey
+	B startWhile
 
 check22
     LDR r0, =GPIOB_BASE
@@ -169,6 +175,7 @@ check22
     MOV r5, #0x00000035 ;5
     STR r5, [r4]
     B displaykey
+	B startWhile
 
 check23
     LDR r0, =GPIOB_BASE
@@ -180,11 +187,13 @@ check23
     MOV r5, #0x00000036 ;6
     STR r5, [r4]
     B displaykey
+	B startWhile
 
 check24
     MOV r5, #0x00000042 ;b
     STR r5, [r4]
     B displaykey
+	B startWhile
 
 row3Check
 	BL delay
@@ -213,6 +222,7 @@ check31
     MOV r5, #0x00000037 ;7
     STR r5, [r4]
     B displaykey
+	B startWhile
 
 check32
     LDR r0, =GPIOB_BASE
@@ -224,6 +234,7 @@ check32
     MOV r5, #0x00000038 ;8
     STR r5, [r4]
 	B displaykey
+	B startWhile
 
 check33
     LDR r0, =GPIOB_BASE
@@ -235,12 +246,14 @@ check33
     MOV r5, #0x00000039 ;9
     STR r5, [r4]
 	B displaykey
+	B startWhile
+
 
 check34
     MOV r5, #0x00000043 ;c
     STR r5, [r4]
 	B displaykey
-
+	B startWhile
 
 
 row4Check
@@ -256,7 +269,6 @@ row4Check
 	AND r1, #0x2E
 	CMP r1, r2					;checks for equivalence
 	BNE check41
-	
 
 check41
 	LDR r0, =GPIOB_BASE
@@ -265,10 +277,11 @@ check41
     MOV r2, #0x0000002C ;I think I got this right
     CMP r1, r2
     BNE check42
-    MOV r5, #0x0000002B ;+ I forgot what the keypad looked like so put some unique characters here sorry
+    MOV r5, #0x0000002A ;+ I forgot what the keypad looked like so put some unique characters here sorry
     STR r5, [r4]
 	B displaykey
-
+	B startWhile
+	
 check42
     LDR r0, =GPIOB_BASE
 	LDR r1, [r0, #GPIO_IDR]
@@ -279,6 +292,7 @@ check42
     MOV r5, #0x00000030 ;0
     STR r5, [r4]
     B displaykey
+	B startWhile
 
 check43
     LDR r0, =GPIOB_BASE
@@ -287,15 +301,16 @@ check43
     MOV r2, #0x00000026
     CMP r1, r2
     BNE check44
-    MOV r5, #0x0000002D ;-
+    MOV r5, #0x00000023 ;-
     STR r5, [r4]
 	B displaykey
-
+	B startWhile
+	
 check44
     MOV r5, #0x00000044 ;d
     STR r5, [r4]
 	B displaykey
-	
+	B startWhile
 
 displaykey
 ;char1 DCD 43
@@ -306,6 +321,8 @@ displaykey
 	MOV r1, #1    ; Second argument
 	BL USART2_Write
  	POP{PC}
+	BL delay
+	B startWhile
 	ENDP		
 	
 	ALIGN			
@@ -314,6 +331,5 @@ displaykey
 ;char1	DCD	0x43
 str 	DCB 'x', 0
 	END
-
 
 
